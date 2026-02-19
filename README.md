@@ -1,3 +1,8 @@
+# Group 11 Project Repository
+
 This is the repository for Group 11's final project in BIS15L at UC Davis.
 
-Group 11's members are Alejandro, Catalina, and Vaishnavi.
+ Members:
+ -Alejandro
+ -Catalina
+ -Vaishnavi
