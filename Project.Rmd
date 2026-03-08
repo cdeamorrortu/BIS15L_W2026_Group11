@@ -1,0 +1,42 @@
+---
+title: "BIS15L Final Project"
+author: "Group 11"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    theme: spacelab
+    toc: no
+---
+
+
+Loading Libraries: 
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+library(janitor)
+library(shiny)
+library(shinydashboard)
+library(naniar)
+``` 
+
+
+Loading and cleaning data, establishing NAs, and selecting columns
+```{r}
+corn <- clean_names(Analysis) %>% 
+  select(location, state, rep, fung, timing, total_disease, yield_kg_ha, utc_total_disease, utc_yield_kg_ha, total_disease_control) %>% 
+  mutate(
+    repetition = rep, 
+    fungicide = fung,
+    treated_disease_total = total_disease,
+    treated_yield = yield_kg_ha,
+    control_disease_total = utc_total_disease,
+    control_yield = utc_yield_kg_ha,
+    yield_change = total_disease_control
+  ) %>% 
+  select(
+    location, state, repetition, fungicide, timing, treated_disease_total, treated_yield, control_disease_total, control_yield, yield_change, 
+  ) %>% 
+  filter(location != "GA" & location != "Ontario") %>% 
+  replace_with_na_all(condition~.x %in% c(".", common_na_numbers, common_na_strings))
+```
+
