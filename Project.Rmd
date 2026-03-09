@@ -99,7 +99,7 @@ corn %>%
   geom_col()
 ```
 
-Which one saves the most amount of corn?
+Which one helps produce the most amount of corn?
 
 ```{r}
 corn %>% 
@@ -107,6 +107,16 @@ mutate(treated_yield=as.numeric(treated_yield)) %>%
   group_by(fungicide) %>% 
   summarize(total_harvest=sum(treated_yield, na.rm = T))
 ```
+```{r}
+corn %>% 
+mutate(treated_yield=as.numeric(treated_yield),
+       fungicide=as.factor(fungicide)) %>%
+  group_by(fungicide) %>% 
+  summarize(total_harvest=sum(treated_yield, na.rm = T)) %>% 
+  ggplot(aes(x=fungicide, y=total_harvest, fill=fungicide))+
+  geom_col()
+```
+
 
 Does this change by state?
 ```{r}
