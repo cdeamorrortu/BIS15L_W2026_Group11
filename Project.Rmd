@@ -20,10 +20,11 @@ library(naniar)
 ``` 
 
 
+
 Loading and cleaning data, establishing NAs, and selecting columns
 ```{r}
 corn <- clean_names(Analysis) %>% 
-  select(location, state, rep, fung, timing, total_disease, yield_kg_ha, utc_total_disease, utc_yield_kg_ha, total_disease_control) %>% 
+  select(location, year, state, rep, fung, timing, total_disease, yield_kg_ha, utc_total_disease, utc_yield_kg_ha, total_disease_control) %>% 
   mutate(
     repetition = rep, 
     fungicide = fung,
@@ -34,9 +35,96 @@ corn <- clean_names(Analysis) %>%
     yield_change = total_disease_control
   ) %>% 
   select(
-    location, state, repetition, fungicide, timing, treated_disease_total, treated_yield, control_disease_total, control_yield, yield_change, 
+    location, state, year, repetition, fungicide, timing, treated_disease_total, treated_yield, control_disease_total, control_yield, yield_change
   ) %>% 
   filter(location != "GA" & location != "Ontario") %>% 
   replace_with_na_all(condition~.x %in% c(".", common_na_numbers, common_na_strings))
+```
+
+
+Comparing different fungicides effectiveness by State
+
+```{r}
+corn %>% 
+  mutate(treated_disease_total=as.numeric(treated_disease_total),
+         fung=as.factor(fungicide)) %>% 
+  ggplot(aes(x=fung, y=treated_disease_total, fill=fung))+
+  geom_col()+
+  facet_wrap(~state)
+
+#MS, SD, and ND have almost no effective treatment across the board, and everyone else minus AR, GA, and LA, have at least one that doesnt work at all
+```
+
+How Fast can Fungus evolve to resist from one year to another?
+```{r}
+corn %>% 
+  filter(year=="2014") %>% 
+  mutate(treated_disease_total=as.numeric(treated_disease_total),
+         fung=as.factor(fungicide)) %>% 
+  ggplot(aes(x=fung, y=treated_disease_total, fill=fung))+
+  geom_col()+
+  facet_wrap(~state)
+```
+
+```{r}
+corn %>% 
+  filter(state==c("AR", "IA", "IL", "IN", "LA", "ND", "Ontario", "WI")) %>%  #Filtered for these for less clutter, since these only ones in 2014,IL no show because no 2015 data
+  filter(year=="2015") %>% 
+  mutate(treated_disease_total=as.numeric(treated_disease_total),
+         fungicide=as.factor(fungicide)) %>% 
+  ggplot(aes(x=fungicide, y=treated_disease_total, fill=fungicide))+
+  geom_col()+
+  facet_wrap(~state)
+```
+
+```{r}
+names(corn)
+```
+
+Which Fungicide is the most effective at treating overall?
+```{r}
+corn %>% 
+  mutate(treated_disease_total=as.numeric(treated_disease_total)) %>% 
+  group_by(fungicide) %>% 
+  summarize(total_treated=sum(treated_disease_total, na.rm=T))
+```
+
+```{r}
+corn %>% 
+  mutate(treated_disease_total=as.numeric(treated_disease_total),
+          fungicide=as.factor(fungicide)) %>% 
+  group_by(fungicide) %>% 
+  summarize(total_treated=sum(treated_disease_total, na.rm=T)) %>% 
+  ggplot(aes(x=fungicide, y=total_treated, fill=fungicide))+
+  geom_col()
+```
+
+Which one saves the most amount of corn?
+
+```{r}
+corn %>% 
+mutate(treated_yield=as.numeric(treated_yield)) %>%
+  group_by(fungicide) %>% 
+  summarize(total_harvest=sum(treated_yield, na.rm = T))
+```
+
+Does this change by state?
+```{r}
+corn %>% 
+mutate(treated_yield=as.numeric(treated_yield)) %>%
+  group_by(fungicide, state) %>% 
+  summarize(total_harvest=sum(treated_yield, na.rm = T)) #I'll finish later but going to make graphs to compare top and bottom, fungicide 9 is most effective overall but going to make graph to see where it works best and which states its beat by other
+```
+
+
+Does Fungicide treatment make a noticeable difference?
+```{r}
+corn %>% 
+  mutate(treated_yield=as.numeric(treated_yield),
+         control_yield=as.numeric(control_yield)) %>%
+  group_by(state) %>% 
+  summarize(total_harvest_treated=sum(treated_yield, na.rm=T),
+            total_harvest_untreated=sum(control_yield, na.rm=T))
+#Will also finish graph part later
 ```
 
