@@ -21,7 +21,7 @@ library(naniar)
 
 ```{r}
 library(readxl)
-Analysis <- read_excel("Analysis.xlsx")
+Analysis <- read_excel("data/fungicide treated corn/Analysis.xlsx")
 ```
 
 Loading and cleaning data, establishing NAs, and selecting columns
@@ -179,7 +179,7 @@ Shiny App
 library(shiny)
 ui <- dashboardPage(
   
-  dashboardHeader(title = "Corn Fungicide Analysis"),
+  dashboardHeader(title = "Corn Fungicide Yield Analysis"),
   
   dashboardSidebar(
     
@@ -190,30 +190,33 @@ ui <- dashboardPage(
       selected = unique(corn$state)[1]
     ),
     
-    hr(),
+   h4("Fungicide Key"),
+    tableOutput("fungicide_key"),
     
-    helpText("Explore fungicide use, disease levels, and yield differences among states.")
+    helpText("Select a state to explore fungicide performance and yield impact.")
     
   ),
+  
+  #add a fungicide key
   
   dashboardBody(
     
     fluidRow(
       
-      valueBoxOutput("most_used_fungicide"),
-      valueBoxOutput("avg_disease"),
-      valueBoxOutput("avg_yield")
+      valueBoxOutput("top_fungicide"),
+      valueBoxOutput("avg_yield"),
+      valueBoxOutput("avg_control_yield")
       
     ),
     
     fluidRow(
       
       box(
-        title = "Fungicide Usage Distribution",
-        status = "primary",
+        title = "Yield by Fungicide",
+        status = "success",
         solidHeader = TRUE,
         width = 6,
-        plotOutput("fungicide_usage_plot", height = 300)
+        plotOutput("yield_plot", height = 300)
       ),
       
       box(
@@ -241,7 +244,7 @@ ui <- dashboardPage(
   )
 )
 
-server <- function(input, output) {
+server <- function(input, output, session) {
   
   state_data <- reactive({
     
@@ -256,36 +259,25 @@ server <- function(input, output) {
   })
   
   
-  most_used <- reactive({
+  # Fungicide with highest yield in selected state
+  best_fungicide <- reactive({
     
     state_data() %>%
-      count(fungicide, sort = TRUE) %>%
+      group_by(fungicide) %>%
+      summarize(avg_yield = mean(treated_yield, na.rm = TRUE)) %>%
+      arrange(desc(avg_yield)) %>%
       slice(1)
     
   })
   
   
-  output$most_used_fungicide <- renderValueBox({
+  output$top_fungicide <- renderValueBox({
     
     valueBox(
-      value = most_used()$fungicide,
-      subtitle = paste("Most Used Fungicide in", input$state_select),
-      icon = icon("flask"),
+      value = best_fungicide()$fungicide,
+      subtitle = paste("Highest Yield Fungicide in", input$state_select),
+      icon = icon("trophy"),
       color = "purple"
-    )
-    
-  })
-  
-  
-  output$avg_disease <- renderValueBox({
-    
-    avg_d <- round(mean(state_data()$treated_disease_total, na.rm = TRUE),2)
-    
-    valueBox(
-      avg_d,
-      "Average Treated Disease Level",
-      icon = icon("virus"),
-      color = "red"
     )
     
   })
@@ -293,43 +285,53 @@ server <- function(input, output) {
   
   output$avg_yield <- renderValueBox({
     
-    avg_y <- round(mean(state_data()$treated_yield, na.rm = TRUE),2)
-    
     valueBox(
-      avg_y,
+      round(mean(state_data()$treated_yield, na.rm = TRUE),2),
       "Average Treated Yield (kg/ha)",
       icon = icon("seedling"),
+      color = "red"
+    )
+    
+  })
+  
+  
+  output$avg_control_yield <- renderValueBox({
+    
+    valueBox(
+      round(mean(state_data()$control_yield, na.rm = TRUE),2),
+      "Average Untreated Yield (kg/ha)",
+      icon = icon("chart-line"),
       color = "green"
     )
     
   })
   
   
-  output$fungicide_usage_plot <- renderPlot({
+  # Yield by fungicide plot
+  output$yield_plot <- renderPlot({
     
     state_data() %>%
-      count(fungicide) %>%
-      ggplot(aes(x = reorder(fungicide, n), y = n, fill = fungicide)) +
-      geom_col(show.legend = FALSE) +
-      coord_flip() +
+      ggplot(aes(x = factor(fungicide), y = treated_yield, fill = factor(fungicide))) +
+      geom_boxplot(show.legend = FALSE) +
       labs(
         x = "Fungicide",
-        y = "Number of Uses",
-        title = paste("Fungicide Usage in", input$state_select)
+        y = "Yield (kg/ha)",
+        title = paste("Yield Distribution by Fungicide in", input$state_select)
       ) +
       theme_minimal(base_size = 14)
     
   })
   
   
+  # Disease plot
   output$disease_plot <- renderPlot({
     
     state_data() %>%
-      ggplot(aes(x = fungicide, y = treated_disease_total, fill = fungicide)) +
+      ggplot(aes(x = factor(fungicide), y = treated_disease_total, fill = factor(fungicide))) +
       geom_boxplot(show.legend = FALSE) +
       labs(
         x = "Fungicide",
-        y = "Total Disease",
+        y = "Disease Level",
         title = paste("Disease Levels by Fungicide in", input$state_select)
       ) +
       theme_minimal(base_size = 14)
@@ -337,7 +339,8 @@ server <- function(input, output) {
   })
   
   
-  output$yield_plot <- renderPlot({
+  # Treated vs untreated comparison
+  output$comparison_plot <- renderPlot({
     
     state_data() %>%
       pivot_longer(
@@ -345,15 +348,24 @@ server <- function(input, output) {
         names_to = "treatment",
         values_to = "yield"
       ) %>%
-      ggplot(aes(x = fungicide, y = yield, fill = treatment)) +
+      ggplot(aes(x = treatment, y = yield, fill = treatment)) +
       geom_boxplot() +
       labs(
-        x = "Fungicide",
+        x = "",
         y = "Yield (kg/ha)",
-        fill = "Treatment",
-        title = paste("Yield Comparison in", input$state_select)
+        title = paste("Yield Improvement from Fungicide in", input$state_select)
       ) +
       theme_minimal(base_size = 14)
+    
+  })
+  
+  
+  # Fungicide key table
+  output$fungicide_key <- renderTable({
+    
+    corn %>%
+      distinct(fungicide) %>%
+      arrange(fungicide)
     
   })
   
