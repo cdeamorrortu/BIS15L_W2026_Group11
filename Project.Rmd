@@ -54,6 +54,11 @@ corn <- clean_names(Analysis) %>%
 ```
 
 
+```{r}
+names(corn)
+```
+
+
 Comparing different fungicides effectiveness by State
 
 ```{r}
@@ -191,7 +196,9 @@ corn %>%
   geom_boxplot()
 ```
 
-Shiny App
+
+Shiny App Comparing these Variables:
+
 ```{r, eval=F, echo=T}
 library(shiny)
 ui <- dashboardPage(
@@ -214,7 +221,7 @@ ui <- dashboardPage(
     
   ),
   
-  #add a fungicide key
+  #Added Fungicide Key ^^
   
   dashboardBody(
     
@@ -231,7 +238,7 @@ ui <- dashboardPage(
       box(
         title = "Yield by Fungicide",
         status = "success",
-        solidHeader = TRUE,
+        solidHeader = T,
         width = 6,
         plotOutput("yield_plot", height = 300)
       ),
@@ -239,27 +246,29 @@ ui <- dashboardPage(
       box(
         title = "Disease Levels by Fungicide",
         status = "warning",
-        solidHeader = TRUE,
+        solidHeader = T,
         width = 6,
         plotOutput("disease_plot", height = 300)
       )
       
     ),
     
+    
     fluidRow(
       
       box(
         title = "Yield Comparison (Treated vs Control)",
         status = "success",
-        solidHeader = TRUE,
+        solidHeader = T,
         width = 12,
-        plotOutput("yield_plot", height = 350)
+        plotOutput("comparison_plot", height = 350)
       )
       
     )
     
   )
 )
+
 
 server <- function(input, output, session) {
   
@@ -276,12 +285,12 @@ server <- function(input, output, session) {
   })
   
   
-  # Fungicide with highest yield in selected state
+  #Fungicide with highest yield in selected state
   best_fungicide <- reactive({
     
     state_data() %>%
       group_by(fungicide) %>%
-      summarize(avg_yield = mean(treated_yield, na.rm = TRUE)) %>%
+      summarize(avg_yield = mean(treated_yield, na.rm = T)) %>%
       arrange(desc(avg_yield)) %>%
       slice(1)
     
@@ -293,7 +302,6 @@ server <- function(input, output, session) {
     valueBox(
       value = best_fungicide()$fungicide,
       subtitle = paste("Highest Yield Fungicide in", input$state_select),
-      icon = icon("trophy"),
       color = "purple"
     )
     
@@ -303,9 +311,8 @@ server <- function(input, output, session) {
   output$avg_yield <- renderValueBox({
     
     valueBox(
-      round(mean(state_data()$treated_yield, na.rm = TRUE),2),
+      round(mean(state_data()$treated_yield, na.rm = T), 2),
       "Average Treated Yield (kg/ha)",
-      icon = icon("seedling"),
       color = "red"
     )
     
@@ -315,21 +322,20 @@ server <- function(input, output, session) {
   output$avg_control_yield <- renderValueBox({
     
     valueBox(
-      round(mean(state_data()$control_yield, na.rm = TRUE),2),
+      round(mean(state_data()$control_yield, na.rm = T), 2),
       "Average Untreated Yield (kg/ha)",
-      icon = icon("chart-line"),
       color = "green"
     )
     
   })
   
   
-  # Yield by fungicide plot
+  #Yield by fungicide plot
   output$yield_plot <- renderPlot({
     
     state_data() %>%
       ggplot(aes(x = factor(fungicide), y = treated_yield, fill = factor(fungicide))) +
-      geom_boxplot(show.legend = FALSE) +
+      geom_boxplot(show.legend = F) +
       labs(
         x = "Fungicide",
         y = "Yield (kg/ha)",
@@ -340,12 +346,12 @@ server <- function(input, output, session) {
   })
   
   
-  # Disease plot
+  #Disease plot
   output$disease_plot <- renderPlot({
     
     state_data() %>%
       ggplot(aes(x = factor(fungicide), y = treated_disease_total, fill = factor(fungicide))) +
-      geom_boxplot(show.legend = FALSE) +
+      geom_boxplot(show.legend = F) +
       labs(
         x = "Fungicide",
         y = "Disease Level",
@@ -356,7 +362,7 @@ server <- function(input, output, session) {
   })
   
   
-  # Treated vs untreated comparison
+  #Treated vs untreated comparison
   output$comparison_plot <- renderPlot({
     
     state_data() %>%
@@ -377,7 +383,7 @@ server <- function(input, output, session) {
   })
   
   
-  # Fungicide key table
+  #Fungicide Key Table
   output$fungicide_key <- renderTable({
     
     key
