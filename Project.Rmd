@@ -27,7 +27,7 @@ Analysis <- read_excel("data/fungicide treated corn/Analysis.xlsx")
 key <- clean_names(read_excel("data/fungicide treated corn/Analysis.xlsx", sheet = "Notes")) %>% 
   as.data.frame(key) %>% 
   select(fungicide_codes) %>% 
-  separate(fungicide_codes, c("code", "fungicide"), sep = "-")
+  separate(fungicide_codes, c("code", "fungicide"), sep = "/")
 
 key
 
@@ -380,9 +380,7 @@ server <- function(input, output, session) {
   # Fungicide key table
   output$fungicide_key <- renderTable({
     
-    corn %>%
-      distinct(fungicide) %>%
-      arrange(fungicide)
+    key
     
   })
   
