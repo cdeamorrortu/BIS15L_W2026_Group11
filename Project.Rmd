@@ -55,7 +55,7 @@ corn %>%
 #MS, SD, and ND have almost no effective treatment across the board, and everyone else minus AR, GA, and LA, have at least one that doesnt work at all
 ```
 
-How Fast can Fungus evolve to resist from one year to another?
+How Fast can Fungus evolve higher resistance from one year to another?
 ```{r}
 corn %>% 
   filter(year=="2014") %>% 
@@ -99,8 +99,8 @@ corn %>%
   geom_col()
 ```
 
-Which one helps produce the most amount of corn?
 
+Which fungicide helps produce the most amount of corn?
 ```{r}
 corn %>% 
 mutate(treated_yield=as.numeric(treated_yield)) %>%
@@ -117,14 +117,37 @@ mutate(treated_yield=as.numeric(treated_yield),
   geom_col()
 ```
 
+```{r}
+corn %>% 
+mutate(treated_yield=as.numeric(treated_yield),
+        fungicide=as.factor(fungicide)) %>%
+  group_by(fungicide, state) %>% 
+  summarize(total_harvest=sum(treated_yield, na.rm = T))
+```
+
 
 Does this change by state?
 ```{r}
 corn %>% 
-mutate(treated_yield=as.numeric(treated_yield)) %>%
+mutate(treated_yield=as.numeric(treated_yield),
+        fungicide=as.factor(fungicide)) %>%
   group_by(fungicide, state) %>% 
-  summarize(total_harvest=sum(treated_yield, na.rm = T)) #I'll finish later but going to make graphs to compare top and bottom, fungicide 9 is most effective overall but going to make graph to see where it works best and which states its beat by other
+  summarize(total_harvest=sum(treated_yield, na.rm = T)) %>% 
+  ggplot(aes(x=state, y=total_harvest, fill=state))+
+  geom_col()+
+  facet_wrap(~fungicide)
 ```
+```{r}
+corn %>% 
+mutate(treated_yield=as.numeric(treated_yield),
+        fungicide=as.factor(fungicide)) %>%
+  group_by(fungicide, state) %>% 
+  summarize(total_harvest=sum(treated_yield, na.rm = T)) %>% 
+  ggplot(aes(x=fungicide, y=total_harvest, fill=fungicide))+
+  geom_col()+
+  facet_wrap(~state)
+```
+
 
 
 Does Fungicide treatment make a noticeable difference?
@@ -134,7 +157,17 @@ corn %>%
          control_yield=as.numeric(control_yield)) %>%
   group_by(state) %>% 
   summarize(total_harvest_treated=sum(treated_yield, na.rm=T),
-            total_harvest_untreated=sum(control_yield, na.rm=T))
-#Will also finish graph part later
+            total_harvest_untreated=sum(control_yield, na.rm=T),
+            gross_diff_=total_harvest_treated-total_harvest_untreated)
+```
+
+```{r}
+corn %>% 
+  mutate(treated_yield=as.numeric(treated_yield),
+         control_yield=as.numeric(control_yield)) %>%
+  group_by(fungicide) %>% 
+  summarize(total_harvest_treated=sum(treated_yield, na.rm=T),
+            total_harvest_untreated=sum(control_yield, na.rm=T),
+            gross_diff_=total_harvest_treated-total_harvest_untreated)
 ```
 
