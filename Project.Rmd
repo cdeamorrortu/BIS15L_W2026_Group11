@@ -21,7 +21,7 @@ library(naniar)
 
 ```{r}
 library(readxl)
-Analysis <- read_excel("Analysis.xlsx")
+Analysis <- read_excel("data/fungicide treated corn/Analysis.xlsx")
 ```
 
 Loading and cleaning data, establishing NAs, and selecting columns
