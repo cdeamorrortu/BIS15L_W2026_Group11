@@ -36,7 +36,7 @@ key
 Loading and cleaning data, establishing NAs, and selecting columns
 ```{r}
 corn <- clean_names(Analysis) %>% 
-  select(location, year, state, rep, fung, timing, total_disease, yield_kg_ha, utc_total_disease, utc_yield_kg_ha, total_disease_control) %>% 
+  select(location, year, state, rep, fung, timing, total_disease, yield_kg_ha, utc_total_disease, utc_yield_kg_ha, total_disease_control, yield_change_kg_ha) %>% 
   mutate(
     repetition = rep, 
     fungicide = fung,
@@ -44,7 +44,7 @@ corn <- clean_names(Analysis) %>%
     treated_yield = yield_kg_ha,
     control_disease_total = utc_total_disease,
     control_yield = utc_yield_kg_ha,
-    yield_change = total_disease_control
+    yield_change = yield_change_kg_ha
   ) %>% 
   select(
     location, state, year, repetition, fungicide, timing, treated_disease_total, treated_yield, control_disease_total, control_yield, yield_change
