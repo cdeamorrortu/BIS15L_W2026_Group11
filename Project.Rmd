@@ -183,6 +183,14 @@ corn %>%
             gross_diff_=total_harvest_treated-total_harvest_untreated)
 ```
 
+```{r}
+corn %>% 
+  mutate(yield_change=as.numeric(yield_change)) %>%
+  group_by(state)%>%
+  ggplot(aes(x=state, y=yield_change, fill=state))+
+  geom_boxplot()
+```
+
 Shiny App
 ```{r, eval=F, echo=T}
 library(shiny)
