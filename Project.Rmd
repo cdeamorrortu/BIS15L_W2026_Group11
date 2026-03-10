@@ -368,9 +368,7 @@ server <- function(input, output, session) {
   # Fungicide key table
   output$fungicide_key <- renderTable({
     
-    corn %>%
-      distinct(fungicide) %>%
-      arrange(fungicide)
+  key
     
   })
   
