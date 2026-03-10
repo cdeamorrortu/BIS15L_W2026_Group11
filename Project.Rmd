@@ -22,11 +22,15 @@ library(naniar)
 ```{r}
 library(readxl)
 Analysis <- read_excel("data/fungicide treated corn/Analysis.xlsx")
+
+
 key <- clean_names(read_excel("data/fungicide treated corn/Analysis.xlsx", sheet = "Notes")) %>% 
+  as.data.frame(key) %>% 
   select(fungicide_codes) %>% 
-  separate(fungicide_codes, c("code", "fungicide"), sep = ". ")
+  separate(fungicide_codes, c("code", "fungicide"), sep = "-")
 
 key
+
 ```
 
 Loading and cleaning data, establishing NAs, and selecting columns
@@ -177,6 +181,14 @@ corn %>%
   summarize(total_harvest_treated=sum(treated_yield, na.rm=T),
             total_harvest_untreated=sum(control_yield, na.rm=T),
             gross_diff_=total_harvest_treated-total_harvest_untreated)
+```
+
+```{r}
+corn %>% 
+  mutate(yield_change=as.numeric(yield_change)) %>%
+  group_by(state)%>%
+  ggplot(aes(x=state, y=yield_change, fill=state))+
+  geom_boxplot()
 ```
 
 Shiny App
