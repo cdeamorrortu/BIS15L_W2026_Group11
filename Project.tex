@@ -1,0 +1,744 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={BIS15L Final Project},
+  pdfauthor={Group 11},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{BIS15L Final Project}
+\author{Group 11}
+\date{2026-03-10}
+
+\begin{document}
+\maketitle
+
+Loading Libraries:
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(tidyverse)}
+\FunctionTok{library}\NormalTok{(janitor)}
+\FunctionTok{library}\NormalTok{(shiny)}
+\FunctionTok{library}\NormalTok{(shinydashboard)}
+\FunctionTok{library}\NormalTok{(naniar)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(readxl)}
+\NormalTok{Analysis }\OtherTok{\textless{}{-}} \FunctionTok{read\_excel}\NormalTok{(}\StringTok{"data/fungicide treated corn/Analysis.xlsx"}\NormalTok{)}
+
+
+\NormalTok{key }\OtherTok{\textless{}{-}} \FunctionTok{clean\_names}\NormalTok{(}\FunctionTok{read\_excel}\NormalTok{(}\StringTok{"data/fungicide treated corn/Analysis.xlsx"}\NormalTok{, }\AttributeTok{sheet =} \StringTok{"Notes"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{as.data.frame}\NormalTok{(key) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(fungicide\_codes) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{separate}\NormalTok{(fungicide\_codes, }\FunctionTok{c}\NormalTok{(}\StringTok{"code"}\NormalTok{, }\StringTok{"fungicide"}\NormalTok{), }\AttributeTok{sep =} \StringTok{"/"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## New names:
+## * `` -> `...3`
+## * `` -> `...4`
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{key}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##    code                                          fungicide
+## 1     1                                        Non-treated
+## 2     2                                 Priaxor 3 oz at V6
+## 3     3                                 Quadris 6 oz at V6
+## 4     4                            Stratego YLD 2 oz at V6
+## 5     5                                 Aproach 3 oz at V6
+## 6     6                                  Fortix 5 oz at V6
+## 7     7                           Headline AMP 10 oz at VT
+## 8     8                            Stratego YLD 4 oz at VT
+## 9     9                           Quilt Xcel 10.5 oz at VT
+## 10   10                                 Aproach 6 oz at VT
+## 11   11                                  Fortix 5 oz at VT
+## 12   12                         Aproach Prima 6.8 oz at VT
+## 13   13                                    Tilt 4 oz at VT
+## 14   14                                  Domark 4 oz at VT
+## 15   15     Priaxor 3 oz at V6 fb Headline AMP 10 oz at VT
+## 16   16     Quadris 6 oz at V6 fb Quilt Xcel 10.5 oz at VT
+## 17   17 Stratego YLD 2 oz at V6 fb Stratego YLD 4 oz at VT
+## 18   18           Aproach 3 oz at V6 fb Aproach 6 oz at VT
+## 19   19             Fortix 5 oz at V6 fb Fortix 5 oz at VT
+\end{verbatim}
+
+Loading and cleaning data, establishing NAs, and selecting columns
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\OtherTok{\textless{}{-}} \FunctionTok{clean\_names}\NormalTok{(Analysis) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(location, year, state, rep, fung, timing, total\_disease, yield\_kg\_ha, utc\_total\_disease, utc\_yield\_kg\_ha, total\_disease\_control, yield\_change\_kg\_ha) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{replace\_with\_na\_all}\NormalTok{(condition}\SpecialCharTok{\textasciitilde{}}\NormalTok{.x }\SpecialCharTok{\%in\%} \FunctionTok{c}\NormalTok{(}\StringTok{"."}\NormalTok{, common\_na\_numbers, common\_na\_strings)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}
+    \AttributeTok{repetition =} \FunctionTok{as.numeric}\NormalTok{(rep), }
+    \AttributeTok{fungicide =} \FunctionTok{as.factor}\NormalTok{(fung),}
+    \AttributeTok{treated\_disease\_total =} \FunctionTok{as.numeric}\NormalTok{(total\_disease),}
+    \AttributeTok{treated\_yield =} \FunctionTok{as.numeric}\NormalTok{(yield\_kg\_ha),}
+    \AttributeTok{control\_disease\_total =} \FunctionTok{as.numeric}\NormalTok{(utc\_total\_disease),}
+    \AttributeTok{control\_yield =} \FunctionTok{as.numeric}\NormalTok{(utc\_yield\_kg\_ha),}
+    \AttributeTok{yield\_change =} \FunctionTok{as.numeric}\NormalTok{(yield\_change\_kg\_ha)}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{select}\NormalTok{(}
+\NormalTok{    location, state, year, repetition, fungicide, timing, treated\_disease\_total, treated\_yield, control\_disease\_total, control\_yield, yield\_change}
+\NormalTok{  ) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(location }\SpecialCharTok{!=} \StringTok{"GA"} \SpecialCharTok{\&}\NormalTok{ location }\SpecialCharTok{!=} \StringTok{"Ontario"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{names}\NormalTok{(corn)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "location"              "state"                 "year"                 
+##  [4] "repetition"            "fungicide"             "timing"               
+##  [7] "treated_disease_total" "treated_yield"         "control_disease_total"
+## [10] "control_yield"         "yield_change"
+\end{verbatim}
+
+Comparing different fungicides effectiveness by State
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_disease\_total=}\FunctionTok{as.numeric}\NormalTok{(treated\_disease\_total),}
+         \AttributeTok{fung=}\FunctionTok{as.factor}\NormalTok{(fungicide)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fung, }\AttributeTok{y=}\NormalTok{treated\_disease\_total, }\AttributeTok{fill=}\NormalTok{fung))}\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{state) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Fungicide Effectiveness By State"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Disease Total (treated)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Fungicide"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 1 row containing missing values or values outside the scale range
+## (`geom_col()`).
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Project_files/figure-latex/unnamed-chunk-5-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\#MS, SD, and ND have almost no effective treatment across the board, and everyone else minus AR, GA, and LA, have at least one that doesnt work at all}
+\end{Highlighting}
+\end{Shaded}
+
+How Fast can Fungus evolve higher resistance from one year to another?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(year}\SpecialCharTok{==}\StringTok{"2014"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_disease\_total=}\FunctionTok{as.numeric}\NormalTok{(treated\_disease\_total),}
+         \AttributeTok{fung=}\FunctionTok{as.factor}\NormalTok{(fungicide)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fung, }\AttributeTok{y=}\NormalTok{treated\_disease\_total, }\AttributeTok{fill=}\NormalTok{fung))}\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{state) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Amount of Treated Disease per State (2014)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Fungicide"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Diseases Treated (count)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Project_files/figure-latex/unnamed-chunk-6-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{filter}\NormalTok{(state}\SpecialCharTok{==}\FunctionTok{c}\NormalTok{(}\StringTok{"AR"}\NormalTok{, }\StringTok{"IA"}\NormalTok{, }\StringTok{"IL"}\NormalTok{, }\StringTok{"IN"}\NormalTok{, }\StringTok{"LA"}\NormalTok{, }\StringTok{"ND"}\NormalTok{, }\StringTok{"Ontario"}\NormalTok{, }\StringTok{"WI"}\NormalTok{)) }\SpecialCharTok{\%\textgreater{}\%}  \CommentTok{\#Filtered for these for less clutter, since these only ones in 2014,IL no show because no 2015 data}
+  \FunctionTok{filter}\NormalTok{(year}\SpecialCharTok{==}\StringTok{"2015"}\NormalTok{) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_disease\_total=}\FunctionTok{as.numeric}\NormalTok{(treated\_disease\_total),}
+         \AttributeTok{fungicide=}\FunctionTok{as.factor}\NormalTok{(fungicide)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fungicide, }\AttributeTok{y=}\NormalTok{treated\_disease\_total, }\AttributeTok{fill=}\NormalTok{fungicide))}\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{state) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Amount of Treated Disease per State (2015)"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Fungicide"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Diseases Treated (count)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: There was 1 warning in `filter()`.
+## i In argument: `state == c("AR", "IA", "IL", "IN", "LA", "ND", "Ontario",
+##   "WI")`.
+## Caused by warning in `state == c("AR", "IA", "IL", "IN", "LA", "ND", "Ontario", "WI")`:
+## ! longer object length is not a multiple of shorter object length
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Project_files/figure-latex/unnamed-chunk-7-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{names}\NormalTok{(corn)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  [1] "location"              "state"                 "year"                 
+##  [4] "repetition"            "fungicide"             "timing"               
+##  [7] "treated_disease_total" "treated_yield"         "control_disease_total"
+## [10] "control_yield"         "yield_change"
+\end{verbatim}
+
+Which Fungicide is the most effective at treating overall?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_disease\_total=}\FunctionTok{as.numeric}\NormalTok{(treated\_disease\_total)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(fungicide) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{total\_treated=}\FunctionTok{sum}\NormalTok{(treated\_disease\_total, }\AttributeTok{na.rm=}\NormalTok{T))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 19 x 2
+##    fungicide total_treated
+##    <fct>             <dbl>
+##  1 1                 2365.
+##  2 2                 2127.
+##  3 3                 1722.
+##  4 4                 2160.
+##  5 5                 1720.
+##  6 6                 2309.
+##  7 7                 1568.
+##  8 8                 1687.
+##  9 9                 1359.
+## 10 10                1345.
+## 11 11                1299.
+## 12 12                 800.
+## 13 13                1088.
+## 14 14                 885.
+## 15 15                1116.
+## 16 16                 916.
+## 17 17                1451.
+## 18 18                1166.
+## 19 19                1158.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_disease\_total=}\FunctionTok{as.numeric}\NormalTok{(treated\_disease\_total),}
+          \AttributeTok{fungicide=}\FunctionTok{as.factor}\NormalTok{(fungicide)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{group\_by}\NormalTok{(fungicide) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{total\_treated=}\FunctionTok{sum}\NormalTok{(treated\_disease\_total, }\AttributeTok{na.rm=}\NormalTok{T)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fungicide, }\AttributeTok{y=}\NormalTok{total\_treated, }\AttributeTok{fill=}\NormalTok{fungicide))}\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Total Amount of Disease Treated by Fungicide"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Fungicide"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Total Disease Treated (count)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Project_files/figure-latex/unnamed-chunk-10-1.pdf}}
+
+Which fungicide helps produce the most amount of corn?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_yield=}\FunctionTok{as.numeric}\NormalTok{(treated\_yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(fungicide) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{total\_harvest=}\FunctionTok{sum}\NormalTok{(treated\_yield, }\AttributeTok{na.rm =}\NormalTok{ T))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 19 x 2
+##    fungicide total_harvest
+##    <fct>             <dbl>
+##  1 1              1669588.
+##  2 2              1470082.
+##  3 3               905614.
+##  4 4              1486072.
+##  5 5              1005453.
+##  6 6              1561025.
+##  7 7              1671028.
+##  8 8              1587997.
+##  9 9              1687768.
+## 10 10             1400069.
+## 11 11             1598759.
+## 12 12              592082.
+## 13 13              408108.
+## 14 14              515956.
+## 15 15             1515679.
+## 16 16              841559.
+## 17 17             1517143.
+## 18 18              977243.
+## 19 19             1387153.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_yield=}\FunctionTok{as.numeric}\NormalTok{(treated\_yield),}
+       \AttributeTok{fungicide=}\FunctionTok{as.factor}\NormalTok{(fungicide)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(fungicide) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{total\_harvest=}\FunctionTok{sum}\NormalTok{(treated\_yield, }\AttributeTok{na.rm =}\NormalTok{ T)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fungicide, }\AttributeTok{y=}\NormalTok{total\_harvest, }\AttributeTok{fill=}\NormalTok{fungicide))}\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Corn Yield by Fungicide"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Fungicide"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Total Yield (kg/ha)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Project_files/figure-latex/unnamed-chunk-12-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_yield=}\FunctionTok{as.numeric}\NormalTok{(treated\_yield),}
+        \AttributeTok{fungicide=}\FunctionTok{as.factor}\NormalTok{(fungicide)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(fungicide, state) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{total\_harvest=}\FunctionTok{sum}\NormalTok{(treated\_yield, }\AttributeTok{na.rm =}\NormalTok{ T))}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `summarise()` has grouped output by 'fungicide'. You can override using the
+## `.groups` argument.
+\end{verbatim}
+
+\begin{verbatim}
+## # A tibble: 214 x 3
+## # Groups:   fungicide [19]
+##    fungicide state total_harvest
+##    <fct>     <chr>         <dbl>
+##  1 1         AR           82719.
+##  2 1         GA           63999.
+##  3 1         IA          363567.
+##  4 1         IL          234249.
+##  5 1         IN          142132.
+##  6 1         LA          174312.
+##  7 1         MI           51125.
+##  8 1         MS           32029.
+##  9 1         ND           91764.
+## 10 1         NE           99282.
+## # i 204 more rows
+\end{verbatim}
+
+Does this change by state?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_yield=}\FunctionTok{as.numeric}\NormalTok{(treated\_yield),}
+        \AttributeTok{fungicide=}\FunctionTok{as.factor}\NormalTok{(fungicide)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(fungicide, state) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{total\_harvest=}\FunctionTok{sum}\NormalTok{(treated\_yield, }\AttributeTok{na.rm =}\NormalTok{ T)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{state, }\AttributeTok{y=}\NormalTok{total\_harvest, }\AttributeTok{fill=}\NormalTok{state))}\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{fungicide) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Total Harvest by State per Fungicide"}\NormalTok{, }\AttributeTok{x =} \StringTok{"State"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Treated Yield (kg/ha)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `summarise()` has grouped output by 'fungicide'. You can override using the
+## `.groups` argument.
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Project_files/figure-latex/unnamed-chunk-14-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+\FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_yield=}\FunctionTok{as.numeric}\NormalTok{(treated\_yield),}
+        \AttributeTok{fungicide=}\FunctionTok{as.factor}\NormalTok{(fungicide)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(fungicide, state) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{total\_harvest=}\FunctionTok{sum}\NormalTok{(treated\_yield, }\AttributeTok{na.rm =}\NormalTok{ T)) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fungicide, }\AttributeTok{y=}\NormalTok{total\_harvest, }\AttributeTok{fill=}\NormalTok{fungicide))}\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{()}\SpecialCharTok{+}
+  \FunctionTok{facet\_wrap}\NormalTok{(}\SpecialCharTok{\textasciitilde{}}\NormalTok{state) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Total Yield per Fungicide by State"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Fungicide"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Total Yield (kg/ha)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## `summarise()` has grouped output by 'fungicide'. You can override using the
+## `.groups` argument.
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Project_files/figure-latex/unnamed-chunk-15-1.pdf}}
+
+Does Fungicide treatment make a noticeable difference?
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_yield=}\FunctionTok{as.numeric}\NormalTok{(treated\_yield),}
+         \AttributeTok{control\_yield=}\FunctionTok{as.numeric}\NormalTok{(control\_yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(state) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{total\_harvest\_treated=}\FunctionTok{sum}\NormalTok{(treated\_yield, }\AttributeTok{na.rm=}\NormalTok{T),}
+            \AttributeTok{total\_harvest\_untreated=}\FunctionTok{sum}\NormalTok{(control\_yield, }\AttributeTok{na.rm=}\NormalTok{T),}
+            \AttributeTok{gross\_diff\_=}\NormalTok{total\_harvest\_treated}\SpecialCharTok{{-}}\NormalTok{total\_harvest\_untreated)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## # A tibble: 14 x 4
+##    state   total_harvest_treated total_harvest_untreated gross_diff_
+##    <chr>                   <dbl>                   <dbl>       <dbl>
+##  1 AR                   1695502.                1571652.     123851.
+##  2 GA                   1128307.                1215980.     -87673.
+##  3 IA                   4710023.                4617379.      92644.
+##  4 IL                   3919367.                3748023.     171344.
+##  5 IN                   2315480.                2274105.      41375.
+##  6 LA                   2416586.                2401202.      15384.
+##  7 MI                    199471.                 204498.      -5027.
+##  8 MS                    602054.                 608557.      -6503.
+##  9 ND                   1126036.                1101169.      24867.
+## 10 NE                   1368713.                1389943.     -21229.
+## 11 Ontario              1039137.                1031356.       7781.
+## 12 SD                    775698.                 743879.      31819.
+## 13 TN                    780229.                 751336.      28893.
+## 14 WI                   1721777.                1740840.     -19062.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{treated\_yield=}\FunctionTok{as.numeric}\NormalTok{(treated\_yield),}
+         \AttributeTok{control\_yield=}\FunctionTok{as.numeric}\NormalTok{(control\_yield)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(fungicide) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{summarize}\NormalTok{(}\AttributeTok{total\_harvest\_treated=}\FunctionTok{sum}\NormalTok{(treated\_yield, }\AttributeTok{na.rm=}\NormalTok{T),}
+            \AttributeTok{total\_harvest\_untreated=}\FunctionTok{sum}\NormalTok{(control\_yield, }\AttributeTok{na.rm=}\NormalTok{T),}
+            \AttributeTok{gross\_diff\_=}\NormalTok{total\_harvest\_treated}\SpecialCharTok{{-}}\NormalTok{total\_harvest\_untreated) }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ fungicide, }\AttributeTok{y =}\NormalTok{ gross\_diff\_)) }\SpecialCharTok{+}
+  \FunctionTok{geom\_col}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{fill =}\NormalTok{ fungicide)) }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Difference in Overall Treated and Untreated Yields per Fungicide"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Fungicide"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Difference (kg/ha)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Project_files/figure-latex/unnamed-chunk-17-1.pdf}}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{corn }\SpecialCharTok{\%\textgreater{}\%} 
+  \FunctionTok{mutate}\NormalTok{(}\AttributeTok{yield\_change=}\FunctionTok{as.numeric}\NormalTok{(yield\_change)) }\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{group\_by}\NormalTok{(fungicide)}\SpecialCharTok{\%\textgreater{}\%}
+  \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x=}\NormalTok{fungicide, }\AttributeTok{y=}\NormalTok{yield\_change, }\AttributeTok{fill=}\NormalTok{fungicide))}\SpecialCharTok{+}
+  \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+  \FunctionTok{labs}\NormalTok{(}\AttributeTok{title =} \StringTok{"Average Yield Difference in Treated and Untreated Crops by Fungicide"}\NormalTok{, }\AttributeTok{x =} \StringTok{"Fungicide"}\NormalTok{, }\AttributeTok{y =} \StringTok{"Change in Yield (kg/ha)"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Warning: Removed 29 rows containing non-finite outside the scale range
+## (`stat_boxplot()`).
+\end{verbatim}
+
+\pandocbounded{\includegraphics[keepaspectratio]{Project_files/figure-latex/unnamed-chunk-18-1.pdf}}
+
+Shiny App Comparing these Variables:
+
+```\{r, eval=F, echo=T\}\# library(shiny) ui \textless- dashboardPage(
+
+dashboardHeader(title = ``Corn Fungicide Yield Analysis''),
+
+dashboardSidebar(
+
+\begin{verbatim}
+selectInput(
+  "state_select",
+  "Select a State:",
+  choices = sort(unique(corn$state)),
+  selected = unique(corn$state)[1]
+),
+\end{verbatim}
+
+h4(``Fungicide Key''), tableOutput(``fungicide\_key''),
+
+\begin{verbatim}
+helpText("Select a state to explore fungicide performance and yield impact.")
+\end{verbatim}
+
+),
+
+\#Added Fungicide Key \^{}\^{}
+
+dashboardBody(
+
+\begin{verbatim}
+fluidRow(
+  
+  valueBoxOutput("top_fungicide"),
+  valueBoxOutput("avg_yield"),
+  valueBoxOutput("avg_control_yield")
+  
+),
+
+fluidRow(
+  
+  box(
+    title = "Yield by Fungicide",
+    status = "success",
+    solidHeader = T,
+    width = 6,
+    plotOutput("yield_plot", height = 300)
+  ),
+  
+  box(
+    title = "Disease Levels by Fungicide",
+    status = "warning",
+    solidHeader = T,
+    width = 6,
+    plotOutput("disease_plot", height = 300)
+  )
+  
+),
+
+
+fluidRow(
+  
+  box(
+    title = "Yield Comparison (Treated vs Control)",
+    status = "success",
+    solidHeader = T,
+    width = 12,
+    plotOutput("comparison_plot", height = 350)
+  )
+  
+)
+\end{verbatim}
+
+) )
+
+server \textless- function(input, output, session) \{
+
+state\_data \textless- reactive(\{
+
+\begin{verbatim}
+corn %>%
+  filter(state == input$state_select) %>%
+  mutate(
+    treated_yield = as.numeric(treated_yield),
+    control_yield = as.numeric(control_yield),
+    treated_disease_total = as.numeric(treated_disease_total)
+  )
+\end{verbatim}
+
+\})
+
+\#Fungicide with highest yield in selected state best\_fungicide
+\textless- reactive(\{
+
+\begin{verbatim}
+state_data() %>%
+  group_by(fungicide) %>%
+  summarize(avg_yield = mean(treated_yield, na.rm = T)) %>%
+  arrange(desc(avg_yield)) %>%
+  slice(1)
+\end{verbatim}
+
+\})
+
+output\$top\_fungicide \textless- renderValueBox(\{
+
+\begin{verbatim}
+valueBox(
+  value = best_fungicide()$fungicide,
+  subtitle = paste("Highest Yield Fungicide in", input$state_select),
+  color = "purple"
+)
+\end{verbatim}
+
+\})
+
+output\$avg\_yield \textless- renderValueBox(\{
+
+\begin{verbatim}
+valueBox(
+  round(mean(state_data()$treated_yield, na.rm = T), 2),
+  "Average Treated Yield (kg/ha)",
+  color = "red"
+)
+\end{verbatim}
+
+\})
+
+output\$avg\_control\_yield \textless- renderValueBox(\{
+
+\begin{verbatim}
+valueBox(
+  round(mean(state_data()$control_yield, na.rm = T), 2),
+  "Average Untreated Yield (kg/ha)",
+  color = "green"
+)
+\end{verbatim}
+
+\})
+
+\#Yield by fungicide plot output\$yield\_plot \textless- renderPlot(\{
+
+\begin{verbatim}
+state_data() %>%
+  ggplot(aes(x = factor(fungicide), y = treated_yield, fill = factor(fungicide))) +
+  geom_boxplot(show.legend = F) +
+  labs(
+    x = "Fungicide",
+    y = "Yield (kg/ha)",
+    title = paste("Yield Distribution by Fungicide in", input$state_select)
+  ) +
+  theme_minimal(base_size = 14)
+\end{verbatim}
+
+\})
+
+\#Disease plot output\$disease\_plot \textless- renderPlot(\{
+
+\begin{verbatim}
+state_data() %>%
+  ggplot(aes(x = factor(fungicide), y = treated_disease_total, fill = factor(fungicide))) +
+  geom_boxplot(show.legend = F) +
+  labs(
+    x = "Fungicide",
+    y = "Disease Level",
+    title = paste("Disease Levels by Fungicide in", input$state_select)
+  ) +
+  theme_minimal(base_size = 14)
+\end{verbatim}
+
+\})
+
+\#Treated vs untreated comparison output\$comparison\_plot \textless-
+renderPlot(\{
+
+\begin{verbatim}
+state_data() %>%
+  pivot_longer(
+    cols = c(treated_yield, control_yield),
+    names_to = "treatment",
+    values_to = "yield"
+  ) %>%
+  ggplot(aes(x = treatment, y = yield, fill = treatment)) +
+  geom_boxplot() +
+  labs(
+    x = "",
+    y = "Yield (kg/ha)",
+    title = paste("Yield Improvement from Fungicide in", input$state_select)
+  ) +
+  theme_minimal(base_size = 14)
+\end{verbatim}
+
+\})
+
+\#Fungicide Key Table output\$fungicide\_key \textless- renderTable(\{
+
+\begin{verbatim}
+key
+\end{verbatim}
+
+\})
+
+\}
+
+shinyApp(ui, server) ```
+
+\end{document}

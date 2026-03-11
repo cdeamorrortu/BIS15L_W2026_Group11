@@ -3,9 +3,11 @@ title: "BIS15L Final Project"
 author: "Group 11"
 date: "`r Sys.Date()`"
 output:
+  pdf_document:
+    toc: false
   html_document:
     theme: spacelab
-    toc: no
+    toc: false
 ---
 
 
@@ -37,20 +39,20 @@ Loading and cleaning data, establishing NAs, and selecting columns
 ```{r}
 corn <- clean_names(Analysis) %>% 
   select(location, year, state, rep, fung, timing, total_disease, yield_kg_ha, utc_total_disease, utc_yield_kg_ha, total_disease_control, yield_change_kg_ha) %>% 
+  replace_with_na_all(condition~.x %in% c(".", common_na_numbers, common_na_strings)) %>% 
   mutate(
-    repetition = rep, 
-    fungicide = fung,
-    treated_disease_total = total_disease,
-    treated_yield = yield_kg_ha,
-    control_disease_total = utc_total_disease,
-    control_yield = utc_yield_kg_ha,
-    yield_change = yield_change_kg_ha
+    repetition = as.numeric(rep), 
+    fungicide = as.factor(fung),
+    treated_disease_total = as.numeric(total_disease),
+    treated_yield = as.numeric(yield_kg_ha),
+    control_disease_total = as.numeric(utc_total_disease),
+    control_yield = as.numeric(utc_yield_kg_ha),
+    yield_change = as.numeric(yield_change_kg_ha)
   ) %>% 
   select(
     location, state, year, repetition, fungicide, timing, treated_disease_total, treated_yield, control_disease_total, control_yield, yield_change
   ) %>% 
-  filter(location != "GA" & location != "Ontario") %>% 
-  replace_with_na_all(condition~.x %in% c(".", common_na_numbers, common_na_strings))
+  filter(location != "GA" & location != "Ontario")
 ```
 
 
@@ -67,7 +69,8 @@ corn %>%
          fung=as.factor(fungicide)) %>% 
   ggplot(aes(x=fung, y=treated_disease_total, fill=fung))+
   geom_col()+
-  facet_wrap(~state)
+  facet_wrap(~state) +
+  labs(title = "Fungicide Effectiveness By State", y = "Disease Total (treated)", x = "Fungicide")
 
 #MS, SD, and ND have almost no effective treatment across the board, and everyone else minus AR, GA, and LA, have at least one that doesnt work at all
 ```
@@ -80,7 +83,8 @@ corn %>%
          fung=as.factor(fungicide)) %>% 
   ggplot(aes(x=fung, y=treated_disease_total, fill=fung))+
   geom_col()+
-  facet_wrap(~state)
+  facet_wrap(~state) +
+  labs(title = "Amount of Treated Disease per State (2014)", x = "Fungicide", y = "Diseases Treated (count)")
 ```
 
 ```{r}
@@ -91,7 +95,8 @@ corn %>%
          fungicide=as.factor(fungicide)) %>% 
   ggplot(aes(x=fungicide, y=treated_disease_total, fill=fungicide))+
   geom_col()+
-  facet_wrap(~state)
+  facet_wrap(~state) +
+  labs(title = "Amount of Treated Disease per State (2015)", x = "Fungicide", y = "Diseases Treated (count)")
 ```
 
 ```{r}
@@ -113,7 +118,8 @@ corn %>%
   group_by(fungicide) %>% 
   summarize(total_treated=sum(treated_disease_total, na.rm=T)) %>% 
   ggplot(aes(x=fungicide, y=total_treated, fill=fungicide))+
-  geom_col()
+  geom_col() +
+  labs(title = "Total Amount of Disease Treated by Fungicide", x = "Fungicide", y = "Total Disease Treated (count)")
 ```
 
 
@@ -131,7 +137,8 @@ mutate(treated_yield=as.numeric(treated_yield),
   group_by(fungicide) %>% 
   summarize(total_harvest=sum(treated_yield, na.rm = T)) %>% 
   ggplot(aes(x=fungicide, y=total_harvest, fill=fungicide))+
-  geom_col()
+  geom_col() +
+  labs(title = "Corn Yield by Fungicide", x = "Fungicide", y = "Total Yield (kg/ha)")
 ```
 
 ```{r}
@@ -152,7 +159,8 @@ mutate(treated_yield=as.numeric(treated_yield),
   summarize(total_harvest=sum(treated_yield, na.rm = T)) %>% 
   ggplot(aes(x=state, y=total_harvest, fill=state))+
   geom_col()+
-  facet_wrap(~fungicide)
+  facet_wrap(~fungicide) +
+  labs(title = "Total Harvest by State per Fungicide", x = "State", y = "Treated Yield (kg/ha)")
 ```
 ```{r}
 corn %>% 
@@ -162,7 +170,8 @@ mutate(treated_yield=as.numeric(treated_yield),
   summarize(total_harvest=sum(treated_yield, na.rm = T)) %>% 
   ggplot(aes(x=fungicide, y=total_harvest, fill=fungicide))+
   geom_col()+
-  facet_wrap(~state)
+  facet_wrap(~state) +
+  labs(title = "Total Yield per Fungicide by State", x = "Fungicide", y = "Total Yield (kg/ha)")
 ```
 
 
@@ -185,15 +194,19 @@ corn %>%
   group_by(fungicide) %>% 
   summarize(total_harvest_treated=sum(treated_yield, na.rm=T),
             total_harvest_untreated=sum(control_yield, na.rm=T),
-            gross_diff_=total_harvest_treated-total_harvest_untreated)
+            gross_diff_=total_harvest_treated-total_harvest_untreated) %>% 
+  ggplot(aes(x = fungicide, y = gross_diff_)) +
+  geom_col(aes(fill = fungicide)) +
+  labs(title = "Difference in Overall Treated and Untreated Yields per Fungicide", x = "Fungicide", y = "Difference (kg/ha)")
 ```
 
 ```{r}
 corn %>% 
   mutate(yield_change=as.numeric(yield_change)) %>%
-  group_by(state)%>%
-  ggplot(aes(x=state, y=yield_change, fill=state))+
-  geom_boxplot()
+  group_by(fungicide)%>%
+  ggplot(aes(x=fungicide, y=yield_change, fill=fungicide))+
+  geom_boxplot() +
+  labs(title = "Average Yield Difference in Treated and Untreated Crops by Fungicide", x = "Fungicide", y = "Change in Yield (kg/ha)")
 ```
 
 
