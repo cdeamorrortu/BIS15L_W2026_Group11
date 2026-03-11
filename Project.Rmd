@@ -3,10 +3,10 @@ title: "BIS15L Final Project"
 author: "Group 11"
 date: "`r Sys.Date()`"
 output:
-  pdf_document:
-    toc: false
   html_document:
     theme: spacelab
+    toc: false
+  pdf_document:
     toc: false
 ---
 
@@ -31,8 +31,6 @@ key <- clean_names(read_excel("data/fungicide treated corn/Analysis.xlsx", sheet
   select(fungicide_codes) %>% 
   separate(fungicide_codes, c("code", "fungicide"), sep = "/")
 
-key
-
 ```
 
 Loading and cleaning data, establishing NAs, and selecting columns
@@ -54,6 +52,27 @@ corn <- clean_names(Analysis) %>%
   ) %>% 
   filter(location != "GA" & location != "Ontario")
 ```
+
+**Variables:**
+
+*location:* Location within a state.
+
+*state:* US state/Canadian province where the crops were treated.
+
+*year:* Year of treatment.
+
+*fungicide:* Values 1-19, each corresponding to a fungicide and application style, definitions for each 'code' can be found in 'key' table. Corresponding also to "repetition" and "timing" values.
+
+*treated_disease_total:* Total disease (fungi) in the treated crops.
+
+*treated_yield:* Yield of crops produced by the treated group (kg/ha)
+
+*control_disease_total:* Total disease (fungi) in control/untreated groups.
+
+*control_yield:* Yield of crops produced by control/untreated groups (kg/ha).
+
+*yield_change:* Difference in treated and untreated yields (kg/ha)
+
 
 
 ```{r}

@@ -142,35 +142,6 @@ Loading Libraries:
 ## * `` -> `...4`
 \end{verbatim}
 
-\begin{Shaded}
-\begin{Highlighting}[]
-\NormalTok{key}
-\end{Highlighting}
-\end{Shaded}
-
-\begin{verbatim}
-##    code                                          fungicide
-## 1     1                                        Non-treated
-## 2     2                                 Priaxor 3 oz at V6
-## 3     3                                 Quadris 6 oz at V6
-## 4     4                            Stratego YLD 2 oz at V6
-## 5     5                                 Aproach 3 oz at V6
-## 6     6                                  Fortix 5 oz at V6
-## 7     7                           Headline AMP 10 oz at VT
-## 8     8                            Stratego YLD 4 oz at VT
-## 9     9                           Quilt Xcel 10.5 oz at VT
-## 10   10                                 Aproach 6 oz at VT
-## 11   11                                  Fortix 5 oz at VT
-## 12   12                         Aproach Prima 6.8 oz at VT
-## 13   13                                    Tilt 4 oz at VT
-## 14   14                                  Domark 4 oz at VT
-## 15   15     Priaxor 3 oz at V6 fb Headline AMP 10 oz at VT
-## 16   16     Quadris 6 oz at V6 fb Quilt Xcel 10.5 oz at VT
-## 17   17 Stratego YLD 2 oz at V6 fb Stratego YLD 4 oz at VT
-## 18   18           Aproach 3 oz at V6 fb Aproach 6 oz at VT
-## 19   19             Fortix 5 oz at V6 fb Fortix 5 oz at VT
-\end{verbatim}
-
 Loading and cleaning data, establishing NAs, and selecting columns
 
 \begin{Shaded}
@@ -193,6 +164,18 @@ Loading and cleaning data, establishing NAs, and selecting columns
   \FunctionTok{filter}\NormalTok{(location }\SpecialCharTok{!=} \StringTok{"GA"} \SpecialCharTok{\&}\NormalTok{ location }\SpecialCharTok{!=} \StringTok{"Ontario"}\NormalTok{)}
 \end{Highlighting}
 \end{Shaded}
+
+Variables: \#location: Location within a state. \#state: US
+state/Canadian province where the crops were treated. \#year: Year of
+treatment. \#fungicide: Values 1-19, each corresponding to a fungicide
+and application style, definitions for each `code' can be found in `key'
+table. Corresponding also to ``repetition'' and ``timing'' values.
+\#treated\_disease\_total: Total disease (fungi) in the treated crops.
+\#treated\_yield: Yield of crops produced by the treated group (kg/ha)
+\#control\_disease\_total: Total disease (fungi) in control/untreated
+groups. \#control\_yield: Yield of crops produced by control/untreated
+groups (kg/ha). \#yield\_change: Difference in treated and untreated
+yields (kg/ha)
 
 \begin{Shaded}
 \begin{Highlighting}[]
@@ -538,207 +521,203 @@ Does Fungicide treatment make a noticeable difference?
 
 Shiny App Comparing these Variables:
 
-```\{r, eval=F, echo=T\}\# library(shiny) ui \textless- dashboardPage(
-
-dashboardHeader(title = ``Corn Fungicide Yield Analysis''),
-
-dashboardSidebar(
-
-\begin{verbatim}
-selectInput(
-  "state_select",
-  "Select a State:",
-  choices = sort(unique(corn$state)),
-  selected = unique(corn$state)[1]
-),
-\end{verbatim}
-
-h4(``Fungicide Key''), tableOutput(``fungicide\_key''),
-
-\begin{verbatim}
-helpText("Select a state to explore fungicide performance and yield impact.")
-\end{verbatim}
-
-),
-
-\#Added Fungicide Key \^{}\^{}
-
-dashboardBody(
-
-\begin{verbatim}
-fluidRow(
+\begin{Shaded}
+\begin{Highlighting}[]
+\FunctionTok{library}\NormalTok{(shiny)}
+\NormalTok{ui }\OtherTok{\textless{}{-}} \FunctionTok{dashboardPage}\NormalTok{(}
   
-  valueBoxOutput("top_fungicide"),
-  valueBoxOutput("avg_yield"),
-  valueBoxOutput("avg_control_yield")
+  \FunctionTok{dashboardHeader}\NormalTok{(}\AttributeTok{title =} \StringTok{"Corn Fungicide Yield Analysis"}\NormalTok{),}
   
-),
-
-fluidRow(
+  \FunctionTok{dashboardSidebar}\NormalTok{(}
+    
+    \FunctionTok{selectInput}\NormalTok{(}
+      \StringTok{"state\_select"}\NormalTok{,}
+      \StringTok{"Select a State:"}\NormalTok{,}
+      \AttributeTok{choices =} \FunctionTok{sort}\NormalTok{(}\FunctionTok{unique}\NormalTok{(corn}\SpecialCharTok{$}\NormalTok{state)),}
+      \AttributeTok{selected =} \FunctionTok{unique}\NormalTok{(corn}\SpecialCharTok{$}\NormalTok{state)[}\DecValTok{1}\NormalTok{]}
+\NormalTok{    ),}
+    
+   \FunctionTok{h4}\NormalTok{(}\StringTok{"Fungicide Key"}\NormalTok{),}
+    \FunctionTok{tableOutput}\NormalTok{(}\StringTok{"fungicide\_key"}\NormalTok{),}
+    
+    \FunctionTok{helpText}\NormalTok{(}\StringTok{"Select a state to explore fungicide performance and yield impact."}\NormalTok{)}
+    
+\NormalTok{  ),}
   
-  box(
-    title = "Yield by Fungicide",
-    status = "success",
-    solidHeader = T,
-    width = 6,
-    plotOutput("yield_plot", height = 300)
-  ),
+  \CommentTok{\#Added Fungicide Key \^{}\^{}}
   
-  box(
-    title = "Disease Levels by Fungicide",
-    status = "warning",
-    solidHeader = T,
-    width = 6,
-    plotOutput("disease_plot", height = 300)
-  )
+  \FunctionTok{dashboardBody}\NormalTok{(}
+    
+    \FunctionTok{fluidRow}\NormalTok{(}
+      
+      \FunctionTok{valueBoxOutput}\NormalTok{(}\StringTok{"top\_fungicide"}\NormalTok{),}
+      \FunctionTok{valueBoxOutput}\NormalTok{(}\StringTok{"avg\_yield"}\NormalTok{),}
+      \FunctionTok{valueBoxOutput}\NormalTok{(}\StringTok{"avg\_control\_yield"}\NormalTok{)}
+      
+\NormalTok{    ),}
+    
+    \FunctionTok{fluidRow}\NormalTok{(}
+      
+      \FunctionTok{box}\NormalTok{(}
+        \AttributeTok{title =} \StringTok{"Yield by Fungicide"}\NormalTok{,}
+        \AttributeTok{status =} \StringTok{"success"}\NormalTok{,}
+        \AttributeTok{solidHeader =}\NormalTok{ T,}
+        \AttributeTok{width =} \DecValTok{6}\NormalTok{,}
+        \FunctionTok{plotOutput}\NormalTok{(}\StringTok{"yield\_plot"}\NormalTok{, }\AttributeTok{height =} \DecValTok{300}\NormalTok{)}
+\NormalTok{      ),}
+      
+      \FunctionTok{box}\NormalTok{(}
+        \AttributeTok{title =} \StringTok{"Disease Levels by Fungicide"}\NormalTok{,}
+        \AttributeTok{status =} \StringTok{"warning"}\NormalTok{,}
+        \AttributeTok{solidHeader =}\NormalTok{ T,}
+        \AttributeTok{width =} \DecValTok{6}\NormalTok{,}
+        \FunctionTok{plotOutput}\NormalTok{(}\StringTok{"disease\_plot"}\NormalTok{, }\AttributeTok{height =} \DecValTok{300}\NormalTok{)}
+\NormalTok{      )}
+      
+\NormalTok{    ),}
+    
+    
+    \FunctionTok{fluidRow}\NormalTok{(}
+      
+      \FunctionTok{box}\NormalTok{(}
+        \AttributeTok{title =} \StringTok{"Yield Comparison (Treated vs Control)"}\NormalTok{,}
+        \AttributeTok{status =} \StringTok{"success"}\NormalTok{,}
+        \AttributeTok{solidHeader =}\NormalTok{ T,}
+        \AttributeTok{width =} \DecValTok{12}\NormalTok{,}
+        \FunctionTok{plotOutput}\NormalTok{(}\StringTok{"comparison\_plot"}\NormalTok{, }\AttributeTok{height =} \DecValTok{350}\NormalTok{)}
+\NormalTok{      )}
+      
+\NormalTok{    )}
+    
+\NormalTok{  )}
+\NormalTok{)}
+
+
+\NormalTok{server }\OtherTok{\textless{}{-}} \ControlFlowTok{function}\NormalTok{(input, output, session) \{}
   
-),
-
-
-fluidRow(
+\NormalTok{  state\_data }\OtherTok{\textless{}{-}} \FunctionTok{reactive}\NormalTok{(\{}
+    
+\NormalTok{    corn }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{filter}\NormalTok{(state }\SpecialCharTok{==}\NormalTok{ input}\SpecialCharTok{$}\NormalTok{state\_select) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{mutate}\NormalTok{(}
+        \AttributeTok{treated\_yield =} \FunctionTok{as.numeric}\NormalTok{(treated\_yield),}
+        \AttributeTok{control\_yield =} \FunctionTok{as.numeric}\NormalTok{(control\_yield),}
+        \AttributeTok{treated\_disease\_total =} \FunctionTok{as.numeric}\NormalTok{(treated\_disease\_total)}
+\NormalTok{      )}
+    
+\NormalTok{  \})}
   
-  box(
-    title = "Yield Comparison (Treated vs Control)",
-    status = "success",
-    solidHeader = T,
-    width = 12,
-    plotOutput("comparison_plot", height = 350)
-  )
   
-)
-\end{verbatim}
+  \CommentTok{\#Fungicide with highest yield in selected state}
+\NormalTok{  best\_fungicide }\OtherTok{\textless{}{-}} \FunctionTok{reactive}\NormalTok{(\{}
+    
+    \FunctionTok{state\_data}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{group\_by}\NormalTok{(fungicide) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{summarize}\NormalTok{(}\AttributeTok{avg\_yield =} \FunctionTok{mean}\NormalTok{(treated\_yield, }\AttributeTok{na.rm =}\NormalTok{ T)) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{arrange}\NormalTok{(}\FunctionTok{desc}\NormalTok{(avg\_yield)) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{slice}\NormalTok{(}\DecValTok{1}\NormalTok{)}
+    
+\NormalTok{  \})}
+  
+  
+\NormalTok{  output}\SpecialCharTok{$}\NormalTok{top\_fungicide }\OtherTok{\textless{}{-}} \FunctionTok{renderValueBox}\NormalTok{(\{}
+    
+    \FunctionTok{valueBox}\NormalTok{(}
+      \AttributeTok{value =} \FunctionTok{best\_fungicide}\NormalTok{()}\SpecialCharTok{$}\NormalTok{fungicide,}
+      \AttributeTok{subtitle =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Highest Yield Fungicide in"}\NormalTok{, input}\SpecialCharTok{$}\NormalTok{state\_select),}
+      \AttributeTok{color =} \StringTok{"purple"}
+\NormalTok{    )}
+    
+\NormalTok{  \})}
+  
+  
+\NormalTok{  output}\SpecialCharTok{$}\NormalTok{avg\_yield }\OtherTok{\textless{}{-}} \FunctionTok{renderValueBox}\NormalTok{(\{}
+    
+    \FunctionTok{valueBox}\NormalTok{(}
+      \FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(}\FunctionTok{state\_data}\NormalTok{()}\SpecialCharTok{$}\NormalTok{treated\_yield, }\AttributeTok{na.rm =}\NormalTok{ T), }\DecValTok{2}\NormalTok{),}
+      \StringTok{"Average Treated Yield (kg/ha)"}\NormalTok{,}
+      \AttributeTok{color =} \StringTok{"red"}
+\NormalTok{    )}
+    
+\NormalTok{  \})}
+  
+  
+\NormalTok{  output}\SpecialCharTok{$}\NormalTok{avg\_control\_yield }\OtherTok{\textless{}{-}} \FunctionTok{renderValueBox}\NormalTok{(\{}
+    
+    \FunctionTok{valueBox}\NormalTok{(}
+      \FunctionTok{round}\NormalTok{(}\FunctionTok{mean}\NormalTok{(}\FunctionTok{state\_data}\NormalTok{()}\SpecialCharTok{$}\NormalTok{control\_yield, }\AttributeTok{na.rm =}\NormalTok{ T), }\DecValTok{2}\NormalTok{),}
+      \StringTok{"Average Untreated Yield (kg/ha)"}\NormalTok{,}
+      \AttributeTok{color =} \StringTok{"green"}
+\NormalTok{    )}
+    
+\NormalTok{  \})}
+  
+  
+  \CommentTok{\#Yield by fungicide plot}
+\NormalTok{  output}\SpecialCharTok{$}\NormalTok{yield\_plot }\OtherTok{\textless{}{-}} \FunctionTok{renderPlot}\NormalTok{(\{}
+    
+    \FunctionTok{state\_data}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{factor}\NormalTok{(fungicide), }\AttributeTok{y =}\NormalTok{ treated\_yield, }\AttributeTok{fill =} \FunctionTok{factor}\NormalTok{(fungicide))) }\SpecialCharTok{+}
+      \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{show.legend =}\NormalTok{ F) }\SpecialCharTok{+}
+      \FunctionTok{labs}\NormalTok{(}
+        \AttributeTok{x =} \StringTok{"Fungicide"}\NormalTok{,}
+        \AttributeTok{y =} \StringTok{"Yield (kg/ha)"}\NormalTok{,}
+        \AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Yield Distribution by Fungicide in"}\NormalTok{, input}\SpecialCharTok{$}\NormalTok{state\_select)}
+\NormalTok{      ) }\SpecialCharTok{+}
+      \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{14}\NormalTok{)}
+    
+\NormalTok{  \})}
+  
+  
+  \CommentTok{\#Disease plot}
+\NormalTok{  output}\SpecialCharTok{$}\NormalTok{disease\_plot }\OtherTok{\textless{}{-}} \FunctionTok{renderPlot}\NormalTok{(\{}
+    
+    \FunctionTok{state\_data}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =} \FunctionTok{factor}\NormalTok{(fungicide), }\AttributeTok{y =}\NormalTok{ treated\_disease\_total, }\AttributeTok{fill =} \FunctionTok{factor}\NormalTok{(fungicide))) }\SpecialCharTok{+}
+      \FunctionTok{geom\_boxplot}\NormalTok{(}\AttributeTok{show.legend =}\NormalTok{ F) }\SpecialCharTok{+}
+      \FunctionTok{labs}\NormalTok{(}
+        \AttributeTok{x =} \StringTok{"Fungicide"}\NormalTok{,}
+        \AttributeTok{y =} \StringTok{"Disease Level"}\NormalTok{,}
+        \AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Disease Levels by Fungicide in"}\NormalTok{, input}\SpecialCharTok{$}\NormalTok{state\_select)}
+\NormalTok{      ) }\SpecialCharTok{+}
+      \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{14}\NormalTok{)}
+    
+\NormalTok{  \})}
+  
+  
+  \CommentTok{\#Treated vs untreated comparison}
+\NormalTok{  output}\SpecialCharTok{$}\NormalTok{comparison\_plot }\OtherTok{\textless{}{-}} \FunctionTok{renderPlot}\NormalTok{(\{}
+    
+    \FunctionTok{state\_data}\NormalTok{() }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{pivot\_longer}\NormalTok{(}
+        \AttributeTok{cols =} \FunctionTok{c}\NormalTok{(treated\_yield, control\_yield),}
+        \AttributeTok{names\_to =} \StringTok{"treatment"}\NormalTok{,}
+        \AttributeTok{values\_to =} \StringTok{"yield"}
+\NormalTok{      ) }\SpecialCharTok{\%\textgreater{}\%}
+      \FunctionTok{ggplot}\NormalTok{(}\FunctionTok{aes}\NormalTok{(}\AttributeTok{x =}\NormalTok{ treatment, }\AttributeTok{y =}\NormalTok{ yield, }\AttributeTok{fill =}\NormalTok{ treatment)) }\SpecialCharTok{+}
+      \FunctionTok{geom\_boxplot}\NormalTok{() }\SpecialCharTok{+}
+      \FunctionTok{labs}\NormalTok{(}
+        \AttributeTok{x =} \StringTok{""}\NormalTok{,}
+        \AttributeTok{y =} \StringTok{"Yield (kg/ha)"}\NormalTok{,}
+        \AttributeTok{title =} \FunctionTok{paste}\NormalTok{(}\StringTok{"Yield Improvement from Fungicide in"}\NormalTok{, input}\SpecialCharTok{$}\NormalTok{state\_select)}
+\NormalTok{      ) }\SpecialCharTok{+}
+      \FunctionTok{theme\_minimal}\NormalTok{(}\AttributeTok{base\_size =} \DecValTok{14}\NormalTok{)}
+    
+\NormalTok{  \})}
+  
+  
+  \CommentTok{\#Fungicide Key Table}
+\NormalTok{  output}\SpecialCharTok{$}\NormalTok{fungicide\_key }\OtherTok{\textless{}{-}} \FunctionTok{renderTable}\NormalTok{(\{}
+    
+\NormalTok{    key}
+    
+\NormalTok{  \})}
+  
+\NormalTok{\}}
 
-) )
+\FunctionTok{shinyApp}\NormalTok{(ui, server)}
+\end{Highlighting}
+\end{Shaded}
 
-server \textless- function(input, output, session) \{
-
-state\_data \textless- reactive(\{
-
-\begin{verbatim}
-corn %>%
-  filter(state == input$state_select) %>%
-  mutate(
-    treated_yield = as.numeric(treated_yield),
-    control_yield = as.numeric(control_yield),
-    treated_disease_total = as.numeric(treated_disease_total)
-  )
-\end{verbatim}
-
-\})
-
-\#Fungicide with highest yield in selected state best\_fungicide
-\textless- reactive(\{
-
-\begin{verbatim}
-state_data() %>%
-  group_by(fungicide) %>%
-  summarize(avg_yield = mean(treated_yield, na.rm = T)) %>%
-  arrange(desc(avg_yield)) %>%
-  slice(1)
-\end{verbatim}
-
-\})
-
-output\$top\_fungicide \textless- renderValueBox(\{
-
-\begin{verbatim}
-valueBox(
-  value = best_fungicide()$fungicide,
-  subtitle = paste("Highest Yield Fungicide in", input$state_select),
-  color = "purple"
-)
-\end{verbatim}
-
-\})
-
-output\$avg\_yield \textless- renderValueBox(\{
-
-\begin{verbatim}
-valueBox(
-  round(mean(state_data()$treated_yield, na.rm = T), 2),
-  "Average Treated Yield (kg/ha)",
-  color = "red"
-)
-\end{verbatim}
-
-\})
-
-output\$avg\_control\_yield \textless- renderValueBox(\{
-
-\begin{verbatim}
-valueBox(
-  round(mean(state_data()$control_yield, na.rm = T), 2),
-  "Average Untreated Yield (kg/ha)",
-  color = "green"
-)
-\end{verbatim}
-
-\})
-
-\#Yield by fungicide plot output\$yield\_plot \textless- renderPlot(\{
-
-\begin{verbatim}
-state_data() %>%
-  ggplot(aes(x = factor(fungicide), y = treated_yield, fill = factor(fungicide))) +
-  geom_boxplot(show.legend = F) +
-  labs(
-    x = "Fungicide",
-    y = "Yield (kg/ha)",
-    title = paste("Yield Distribution by Fungicide in", input$state_select)
-  ) +
-  theme_minimal(base_size = 14)
-\end{verbatim}
-
-\})
-
-\#Disease plot output\$disease\_plot \textless- renderPlot(\{
-
-\begin{verbatim}
-state_data() %>%
-  ggplot(aes(x = factor(fungicide), y = treated_disease_total, fill = factor(fungicide))) +
-  geom_boxplot(show.legend = F) +
-  labs(
-    x = "Fungicide",
-    y = "Disease Level",
-    title = paste("Disease Levels by Fungicide in", input$state_select)
-  ) +
-  theme_minimal(base_size = 14)
-\end{verbatim}
-
-\})
-
-\#Treated vs untreated comparison output\$comparison\_plot \textless-
-renderPlot(\{
-
-\begin{verbatim}
-state_data() %>%
-  pivot_longer(
-    cols = c(treated_yield, control_yield),
-    names_to = "treatment",
-    values_to = "yield"
-  ) %>%
-  ggplot(aes(x = treatment, y = yield, fill = treatment)) +
-  geom_boxplot() +
-  labs(
-    x = "",
-    y = "Yield (kg/ha)",
-    title = paste("Yield Improvement from Fungicide in", input$state_select)
-  ) +
-  theme_minimal(base_size = 14)
-\end{verbatim}
-
-\})
-
-\#Fungicide Key Table output\$fungicide\_key \textless- renderTable(\{
-
-\begin{verbatim}
-key
-\end{verbatim}
-
-\})
-
-\}
-
-shinyApp(ui, server) ```
 
 \end{document}
