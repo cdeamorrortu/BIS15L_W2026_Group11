@@ -11,7 +11,7 @@ output:
 ---
 
 
-Data from "Meta-analysis of yield response of foliar fungicide-treated hybrid corn in the United States and Ontario, Canada," by Kiersten Wise et al. Can be accessed at https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0217510
+Data from "Meta-analysis of yield response of foliar fungicide-treated hybrid corn in the United States and Ontario, Canada," by Kiersten Wise et al. Can be accessed at https://pubmed.ncbi.nlm.nih.gov/31166965/
 
 
 
