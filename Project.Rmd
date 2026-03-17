@@ -11,33 +11,48 @@ output:
 ---
 
 
-Loading Libraries: 
+Data from "Meta-analysis of yield response of foliar fungicide-treated hybrid corn in the United States and Ontario, Canada," by Kiersten Wise et al. Can be accessed at https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0217510
+
+
+
+***Loading and cleaning libraries and data, establishing NAs, and selecting variables (Catalina):***
+
 
 ```{r message=FALSE, warning=FALSE}
+
+#Loading libraries
+
 library(tidyverse)
 library(janitor)
 library(shiny)
 library(shinydashboard)
 library(naniar)
+library(readxl)
 ``` 
 
+
 ```{r}
-library(readxl)
+
+#Reading data
+
 Analysis <- read_excel("data/fungicide treated corn/Analysis.xlsx")
 
+#Creating a table for the fungicide key for ShinyApp
 
 key <- clean_names(read_excel("data/fungicide treated corn/Analysis.xlsx", sheet = "Notes")) %>% 
   as.data.frame(key) %>% 
   select(fungicide_codes) %>% 
-  separate(fungicide_codes, c("code", "fungicide"), sep = "/")
+  separate(fungicide_codes, c("code", "fungicide"), sep = "/") 
 
 ```
 
-Loading and cleaning data, establishing NAs, and selecting columns (Catalina)
 ```{r}
+
+#Cleaning, selecting, and filtering data.
+
 corn <- clean_names(Analysis) %>% 
   select(location, year, state, rep, fung, timing, total_disease, yield_kg_ha, utc_total_disease, utc_yield_kg_ha, total_disease_control, yield_change_kg_ha) %>% 
-  replace_with_na_all(condition~.x %in% c(".", common_na_numbers, common_na_strings)) %>% 
+  replace_with_na_all(condition~.x %in% c(".", common_na_numbers, common_na_strings)) %>% #Replacing NA replacements with real NAs, our data used "." instead of anything else but using common numbers and strings just in case
   mutate(
     repetition = as.numeric(rep), 
     fungicide = as.factor(fung),
@@ -46,12 +61,19 @@ corn <- clean_names(Analysis) %>%
     control_disease_total = as.numeric(utc_total_disease),
     control_yield = as.numeric(utc_yield_kg_ha),
     yield_change = as.numeric(yield_change_kg_ha)
-  ) %>% 
+  ) %>% #mutating into numerics and factors for graphing purposes
   select(
     location, state, year, repetition, fungicide, timing, treated_disease_total, treated_yield, control_disease_total, control_yield, yield_change
   ) %>% 
-  filter(location != "GA" & location != "Ontario")
+  filter(location != "GA") #filtering out Georgia because it had no values to compare with in 2014.
 ```
+
+
+
+```{r}
+names(corn)
+```
+
 
 **Variables:**
 
@@ -75,12 +97,9 @@ corn <- clean_names(Analysis) %>%
 
 
 
-```{r}
-names(corn)
-```
 
+***Graphical Analysis (Alejandro)***
 
-Graphical Analysis (Alejandro)
 Comparing different fungicides effectiveness by State
 
 ```{r}
@@ -230,7 +249,11 @@ corn %>%
 ```
 
 
-Shiny App Comparing these Variables (Vaishnavi)
+
+
+
+
+***Shiny App Comparing these Variables (Vaishnavi)***
 
 ```{r, eval=F, echo=T}
 library(shiny)
