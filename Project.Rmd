@@ -33,7 +33,7 @@ key <- clean_names(read_excel("data/fungicide treated corn/Analysis.xlsx", sheet
 
 ```
 
-Loading and cleaning data, establishing NAs, and selecting columns
+Loading and cleaning data, establishing NAs, and selecting columns (Catalina)
 ```{r}
 corn <- clean_names(Analysis) %>% 
   select(location, year, state, rep, fung, timing, total_disease, yield_kg_ha, utc_total_disease, utc_yield_kg_ha, total_disease_control, yield_change_kg_ha) %>% 
@@ -80,6 +80,7 @@ names(corn)
 ```
 
 
+Graphical Analysis (Alejandro)
 Comparing different fungicides effectiveness by State
 
 ```{r}
@@ -229,7 +230,7 @@ corn %>%
 ```
 
 
-Shiny App Comparing these Variables:
+Shiny App Comparing these Variables (Vaishnavi)
 
 ```{r, eval=F, echo=T}
 library(shiny)
